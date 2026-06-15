@@ -1,0 +1,11 @@
+{
+  "name": "@xresearch/xpaper",
+  "version": "0.0.0",
+  "private": false,
+  "type": "module",
+  "dependencies": {
+    "@xresearch/xsubstrate": "*",
+    "@xresearch/xcontract": "*",
+    "@xresearch/xkit": "*"
+  }
+}
