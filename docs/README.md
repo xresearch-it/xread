@@ -1,13 +1,6 @@
 # xpaper · spec
 
-- **Package** `@xresearch/xpaper`
-- **Layer** 2 surface
-- **Visibility** public
-- **License** Apache-2.0
-- **Language** TS
-- **Status** active
-- **Depends on** xsubstrate, xcontract, xkit
-- **Style** [`xresearch-std/CODING-STYLE.md`](https://github.com/xresearch-it/xresearch-std)
+`@xresearch/xpaper` · identity + metadata in the [repo README](../README.md)
 
 > **Specs = Docs.** This is xpaper's own spec, carried in xpaper's own repo. It is **self-contained**: an external contributor sees this package and the public packages it composes over (`xsubstrate`, `xcontract`, `xkit`, `xresearch-std`) — nothing else. The package is described as a standalone box with a typed interface; system wiring is never its concern.
 
