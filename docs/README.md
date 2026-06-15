@@ -293,9 +293,7 @@ xpaper's UI is built on **`xkit`** (the shared render component + design system 
 ## Build & identity
 
 - **Identity** is the workspace name `@xresearch/xpaper`, stable regardless of where the repo lives — a package can change location or visibility without a single import changing.
-- **Depends on** `xsubstrate` (the base it reads), `xcontract` (the shapes it conforms to), and `xkit` (the shared render component its `render` composes over) — published entry points only, never an engine peer's internals (C-18).
 - **Pure logic, environment-agnostic** — no Cloudflare/Workers/Pages imports; the edge/deploy layer is never a package's concern.
-- **Style** is [`xresearch-std/CODING-STYLE.md`](https://github.com/xresearch-it/xresearch-std), submodule'd in; this package keeps no local copy of the constraints.
 
 ```
               citationGraph                          render
