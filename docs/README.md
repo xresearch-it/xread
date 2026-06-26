@@ -1,25 +1,25 @@
-# xpaper · spec
+# xread · spec
 
-`@xresearch/xpaper` · identity + metadata in the [repo README](../README.md)
+`@xresearch/xread` · identity + metadata in the [repo README](../README.md)
 
-> **Specs = Docs.** This is xpaper's own spec, carried in xpaper's own repo. It is **self-contained**: an external contributor sees this package and the public packages it composes over (`xsubstrate`, `xcontract`, `xkit`, `xresearch-std`) — nothing else. The package is described as a standalone box with a typed interface; system wiring is never its concern.
+> **Specs = Docs.** This is xread's own spec, carried in xread's own repo. It is **self-contained**: an external contributor sees this package and the public packages it composes over (`xsubstrate`, `xcontract`, `xkit`, `xresearch-std`) — nothing else. The package is described as a standalone box with a typed interface; system wiring is never its concern.
 
 ---
 
 ## Responsibility
 
-xpaper is **the reader + citation-browser surface**: it builds a paper-reference graph from metadata and projects a workspace subgraph to a sourced draft. It is **pure logic, environment-agnostic** (no Cloudflare/Workers/Pages imports). As a **surface** (a declared composition, `render ∘ citationGraph`) it composes over the **base** (`xsubstrate` / `xcontract`) plus the shared render component (`xkit`, the `render` of its algebra) — via published `@xresearch/<name>` entry points only, never an engine peer's internals (C-18). That is what keeps it independently extractable.
+xread is **the reader + citation-browser surface**: it builds a paper-reference graph from metadata and projects a workspace subgraph to a sourced draft. It is **pure logic, environment-agnostic** (no Cloudflare/Workers/Pages imports). As a **surface** (a declared composition, `render ∘ citationGraph`) it composes over the **base** (`xsubstrate` / `xcontract`) plus the shared render component (`xkit`, the `render` of its algebra) — via published `@xresearch/<name>` entry points only, never an engine peer's internals (C-18). That is what keeps it independently extractable.
 
 The surface IS a composition, so its own responsibility is stated as one:
 
 ```
-xpaper = render ∘ citationGraph(xsubstrate)
+xread = render ∘ citationGraph(xsubstrate)
 ```
 
 Read literally:
 
-- **`xsubstrate`** is the base — the append-only claim-graph + event-log it reads from. xpaper holds no store of its own; it is a **functor over the substrate**.
-- **`citationGraph`** is the projection xpaper *adds*: the paper-reference network (paper nodes, `cited_works`, `cites` edges, resolution states, OA enrichment), built from **metadata alone** — no reasoning, no claim-extraction in the path.
+- **`xsubstrate`** is the base — the append-only claim-graph + event-log it reads from. xread holds no store of its own; it is a **functor over the substrate**.
+- **`citationGraph`** is the projection xread *adds*: the paper-reference network (paper nodes, `cited_works`, `cites` edges, resolution states, OA enrichment), built from **metadata alone** — no reasoning, no claim-extraction in the path.
 - **`render`** is the surface: the shared render-component (from `xkit`) showing a subgraph selection, plus the one-direction **compose** projection (`graph → Markdown draft`) that reads what the graph holds and writes nothing back.
 
 Two faculties, one package:
@@ -29,13 +29,13 @@ Two faculties, one package:
 | **Citation graph** (§ 3.1) | builds graph from parsed metadata | none |
 | **Compose / export** (§ 3.2) | projects graph → draft, **read-only over the graph** | none (deterministic templates) |
 
-**No reasoning lives here.** xpaper renders structure that already exists in the store and projects it out; it never calls a retrieval or reasoning operation. The citation-graph build and the compose/export projection are its **own**.
+**No reasoning lives here.** xread renders structure that already exists in the store and projects it out; it never calls a retrieval or reasoning operation. The citation-graph build and the compose/export projection are its **own**.
 
 ---
 
 ## Interface
 
-xpaper reads its shapes from the store and `xcontract`; it defines no new tables. What crosses its boundary:
+xread reads its shapes from the store and `xcontract`; it defines no new tables. What crosses its boundary:
 
 **In**
 - `paper.parsed` — the trigger to build a paper node + reference list from parser output (§ 3.1.3).
@@ -50,7 +50,7 @@ xpaper reads its shapes from the store and `xcontract`; it defines no new tables
 - `POST /api/citations/render` — the one citation renderer (inline `[@key]`, reference list, `.bib`, copy-as-cited).
 - Export events appended to the store (the export records itself; the substrate is never mutated).
 
-xpaper **owns no content** and **writes nothing back** to the substrate beyond append-only export/resolution events.
+xread **owns no content** and **writes nothing back** to the substrate beyond append-only export/resolution events.
 
 ---
 
@@ -69,7 +69,7 @@ A navigable **paper-reference network** built from paper metadata + the parsed r
 
 #### 3.1.2 · Graph shape
 
-The graph is three node/edge kinds over the substrate. xpaper does **not** define new tables; it reads the substrate's `cited_works` rows and the polymorphic `edges` table (the field-level schema is `xsubstrate`'s; xpaper's contract is what it *reads*, conforming to `xcontract`).
+The graph is three node/edge kinds over the substrate. xread does **not** define new tables; it reads the substrate's `cited_works` rows and the polymorphic `edges` table (the field-level schema is `xsubstrate`'s; xread's contract is what it *reads*, conforming to `xcontract`).
 
 | Element | What it is | Why this shape, not another |
 |---|---|---|
@@ -81,7 +81,7 @@ The graph is three node/edge kinds over the substrate. xpaper does **not** defin
 
 #### 3.1.3 · Build from metadata
 
-On `paper.parsed`, xpaper parses the **reference list** (parser output) and creates, per paper:
+On `paper.parsed`, xread parses the **reference list** (parser output) and creates, per paper:
 
 1. the **paper node**,
 2. one **`cited_works` row per reference**,
@@ -259,7 +259,7 @@ A multi-claim copy block **deliberately never poses as a workspace export** — 
 
 ## Invariants
 
-xpaper is the code-level enforcement of its slice. The constraints below are cited by `C-n` from [`xresearch-std/CODING-STYLE.md`](https://github.com/xresearch-it/xresearch-std).
+xread is the code-level enforcement of its slice. The constraints below are cited by `C-n` from [`xresearch-std/CODING-STYLE.md`](https://github.com/xresearch-it/xresearch-std).
 
 | Property | Where it binds | Constraint |
 |---|---|---|
@@ -273,18 +273,18 @@ xpaper is the code-level enforcement of its slice. The constraints below are cit
 | **Errors are values at the seam** — `Result<T, E>`; an enrichment / resolution failure is a named state, never a swallow. | § 3.1.4 · § 3.1.6 | C-11 · C-12 |
 | **Nothing unbounded** — whole-workspace export is async + budgeted; neighbourhoods truncate to a named cap. | § 3.1.7 · § 3.2.3 | C-22 · C-23 |
 | **Additive evolution only** — reserved `format` values and export scopes extend the contract, never re-mean it. | § 3.2.10 | C-4 · C-25 |
-| **The contract is the only source of shapes** — every field / route / column xpaper reads is read from `xcontract` or the schema first. | the whole package | C-2 |
+| **The contract is the only source of shapes** — every field / route / column xread reads is read from `xcontract` or the schema first. | the whole package | C-2 |
 
 ---
 
 ## UI
 
-xpaper's UI is built on **`xkit`** (the shared render component + design system + API client). Like every package repo, xpaper ships **its own** dev / inspector / demo surface, so the module's behaviour is visible **in isolation**.
+xread's UI is built on **`xkit`** (the shared render component + design system + API client). Like every package repo, xread ships **its own** dev / inspector / demo surface, so the module's behaviour is visible **in isolation**.
 
 - **One render component, selection-state, not a bespoke screen.** The citation graph is **one selection-state** of the shared render component (a subgraph) — selecting a node switches the **right render-component** to that entity's view (§ 3.1.5). There is no second viewer.
 - **One citation renderer everywhere.** Inline keys (§ 3.2.4), the reference list and `.bib` (§ 3.2.7), and copy-as-cited (§ 3.2.11) all key off the **same** `POST /api/citations/render` implementation — one key scheme by construction.
 - **Compose is an expand-mode, not a screen.** Compose **expands the right render-component into a focused editor** while the left map collapses to a rail. Same component, focused state — consistent with the one-render-component rule above.
-- **Honest UX is non-negotiable:** the truncation affordance (§ 3.1.7) names its cap; resolution state (§ 3.1.4) is shown, never hidden; the export's "as of" line and surviving honesty marks (§ 3.2.4) render visibly. xpaper's UI never launders the substrate's honesty.
+- **Honest UX is non-negotiable:** the truncation affordance (§ 3.1.7) names its cap; resolution state (§ 3.1.4) is shown, never hidden; the export's "as of" line and surviving honesty marks (§ 3.2.4) render visibly. xread's UI never launders the substrate's honesty.
 
 > **UI development convention.** All UI work on this package uses the `superpowers` `brainstorming` / `visual-companion` skill — a standing convention, no exceptions. No UI work starts without it.
 
@@ -292,7 +292,7 @@ xpaper's UI is built on **`xkit`** (the shared render component + design system 
 
 ## Build & identity
 
-- **Identity** is the workspace name `@xresearch/xpaper`, stable regardless of where the repo lives — a package can change location or visibility without a single import changing.
+- **Identity** is the workspace name `@xresearch/xread`, stable regardless of where the repo lives — a package can change location or visibility without a single import changing.
 - **Pure logic, environment-agnostic** — no Cloudflare/Workers/Pages imports; the edge/deploy layer is never a package's concern.
 
 ```
@@ -313,4 +313,4 @@ xpaper's UI is built on **`xkit`** (the shared render component + design system 
                                 · async export-queue, snapshot + diff
 ```
 
-xpaper **builds** a graph from metadata and **projects** it to a sourced draft. It reasons about nothing, owns no content, and writes nothing back to the store — `render ∘ citationGraph(xsubstrate)`, exactly.
+xread **builds** a graph from metadata and **projects** it to a sourced draft. It reasons about nothing, owns no content, and writes nothing back to the store — `render ∘ citationGraph(xsubstrate)`, exactly.
