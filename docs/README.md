@@ -227,7 +227,7 @@ A later **optional LLM "smooth" pass is gated behind a validator** that emits `s
 
 #### 3.2.10 · Stable export interface — formats and scopes
 
-Markdown is the MVP target. The renderer is a **projection engine behind a stable export interface**, so future shapes plug into the *same* Compose stage **without touching the graph or any caller**:
+Markdown is the first compose target — but compose-export is the post-traction **destination** surface (M4), wired by neither MVP app; the MVP `xread` ships the reader + citation-graph only. The renderer is a **projection engine behind a stable export interface**, so future shapes plug into the *same* Compose stage **without touching the graph or any caller**:
 
 - **Formats:** LaTeX and PDF rendering plug in later; their `format` values are **already reserved** in the underlying `exports` CHECK. The reference list is additionally exportable as **`.bib`**, rendered by the **same `POST /api/citations/render`** implementation as copy-as-cited — one key scheme everywhere by construction.
 - **Scopes:** MVP ships **exactly one** — the working set. The named future projections (a paper's claims, a gaps report, an annotated bibliography, a claim dossier) are **seams**, additive on `exports.params_json`, **never a second pipeline.** (C-4: no speculative generality — the seams are reserved, not built.)
